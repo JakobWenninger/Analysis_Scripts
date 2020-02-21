@@ -19,6 +19,7 @@ from plotxy import newfig,pltsettings,lbl,plot
 
 kwargs_IV_Response_rawData['skip_IV_simulation']=True
 kwargs_IV_Response_rawData['offsetThreshold']= .2
+kwargs_IV_Response_rawData['junctionArea']=1.5
 
 parser = ArgumentParser()
 parser.add_argument('-f', '--folder', action='store',default = 'Default_Folder', help='The folder in which the result is stored in.')
@@ -45,12 +46,20 @@ ylims = {'Backup_Old_m.csv':[-300,300],
           'D1_17_m.csv':[-200,200], 
           'D1_17_n.csv':[-200,200]}
 
+r300K = {'Backup_Old_m.csv':90.5, 
+          'Backup_Old_n.csv':90.5, 
+          'D1_15_m.csv':70.4,
+          'D1_15_n.csv':70.4, 
+          'D1_17_m.csv':85, 
+          'D1_17_n.csv':85}
+
 for i in filenames:
+    kwargs_IV_Response_rawData['normalResistance300K']=r300K[i]
     IV = IV_Response(i,**kwargs_IV_Response_rawData)
     title=newfig(i.replace('.csv','_Manual_Offset_Correction'))
-    IV.plot_IV_with_Info([-3.9,50,-3.9,50],linespacing=1.7,fontsize=10)
+    IV.plot_IV_with_Info([-3.85,10,-3.85,10],linespacing=1.7,fontsize=10)
     plt.tight_layout()
-    pltsettings(save=directory+title,fileformat='.pdf',disp = True,close=True, xlabel=lbl['uA'],ylabel=lbl['mV'], 
+    pltsettings(save=directory+title,fileformat='.pdf',disp = True,close=True, xlabel=lbl['mV'],ylabel=lbl['uA'], 
                 xlim=[-4,4],ylim=ylims[i],title=None,legendColumns=1,skip_legend=True)
 
 
